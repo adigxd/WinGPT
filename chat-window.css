@@ -178,7 +178,8 @@
   border-color: #F0F0F0;
 }
 
-#send-btn {
+#send-btn,
+#clear-btn {
   background: #FFFFFF;
   color: #808080;
   border: 1px solid #F0F0F0;
@@ -190,12 +191,14 @@
   white-space: nowrap;
 }
 
-#send-btn:hover {
+#send-btn:hover,
+#clear-btn:hover {
   background: #F0F0F0;
   color: #808080;
 }
 
-#send-btn:active {
+#send-btn:active,
+#clear-btn:active {
   background: #F0F0F0;
   color: #808080;
 }

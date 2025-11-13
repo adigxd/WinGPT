@@ -19,6 +19,7 @@ function createChatWindow() {
       <div class="chat-messages" id="chat-messages"></div>
       <div class="chat-input-container">
         <textarea id="chat-input" placeholder="Type your message..." rows="1"></textarea>
+        <button id="clear-btn">Clear Context</button>
         <button id="send-btn">Send</button>
       </div>
     </div>
@@ -70,11 +71,18 @@ function setupChatWindow() {
   const zoomInBtn = chatWindow.querySelector('.zoom-in-btn');
   const zoomOutBtn = chatWindow.querySelector('.zoom-out-btn');
   const sendBtn = chatWindow.querySelector('#send-btn');
+  const clearBtn = chatWindow.querySelector('#clear-btn');
   const chatInput = chatWindow.querySelector('#chat-input');
   const chatMessages = chatWindow.querySelector('#chat-messages');
 
   closeBtn.addEventListener('click', () => {
     toggleChat();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    // Clear all messages except system messages (they'll be re-added on next send)
+    const messages = chatMessages.querySelectorAll('.message:not(.system)');
+    messages.forEach(msg => msg.remove());
   });
 
   zoomInBtn.addEventListener('click', (e) => {
@@ -130,15 +138,19 @@ function setupChatWindow() {
     // Build messages array
     let messages = getMessageHistory();
     
-    // Add system message for no markdown mode if enabled and not already present
-    if (noMarkdown) {
-      const hasSystemMessage = messages.some(msg => msg.role === 'system');
-      if (!hasSystemMessage) {
-        messages.unshift({
-          role: 'system',
-          content: 'Do not use markdown formatting in your responses. Write in plain text only, using line breaks and spacing for readability instead of markdown syntax like **bold**, *italic*, # headers, code blocks, lists with - or *, etc.'
-        });
+    // Add system message(s) if not already present
+    const hasSystemMessage = messages.some(msg => msg.role === 'system');
+    if (!hasSystemMessage) {
+      let systemContent = 'Format your responses with proper line breaks. Use separate lines for different thoughts, paragraphs, or sections. Do not write everything as one large paragraph block. Break up your response into readable sections with line breaks.';
+      
+      if (noMarkdown) {
+        systemContent += ' Additionally, do not use markdown formatting. Write in plain text only, using line breaks and spacing for readability instead of markdown syntax like **bold**, *italic*, # headers, code blocks, lists with - or *, etc.';
       }
+      
+      messages.unshift({
+        role: 'system',
+        content: systemContent
+      });
     }
     
     // Add user message
