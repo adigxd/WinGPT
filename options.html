@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WinGPT - Settings</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #FFFFFF;
+    }
+    .container {
+      background: #FFFFFF;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border: 1px solid #F0F0F0;
+    }
+    h1 {
+      margin: 0 0 20px 0;
+      color: #808080;
+      font-size: 24px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #808080;
+      font-weight: 500;
+    }
+    input[type="password"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #F0F0F0;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+      background: #FFFFFF;
+      color: #808080;
+    }
+    input[type="password"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #F0F0F0;
+    }
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #F0F0F0;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #FFFFFF;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #F0F0F0;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+    .model-input-container {
+      display: none;
+    }
+    .model-input-container.active {
+      display: block;
+    }
+    .help-text {
+      font-size: 12px;
+      color: #808080;
+      margin-top: 5px;
+    }
+    .help-text a {
+      color: #808080;
+      text-decoration: none;
+    }
+    .help-text a:hover {
+      text-decoration: underline;
+    }
+    button {
+      background: #FFFFFF;
+      color: #808080;
+      border: 1px solid #F0F0F0;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    button:hover {
+      background: #F0F0F0;
+      color: #808080;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    .status.success {
+      background: #FFFFFF;
+      color: #808080;
+      border: 1px solid #F0F0F0;
+      display: block;
+    }
+    .status.error {
+      background: #FFFFFF;
+      color: #808080;
+      border: 1px solid #F0F0F0;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WinGPT Settings</h1>
+    
+    <div class="form-group">
+      <label for="apiKey">OpenAI API Key</label>
+      <input type="password" id="apiKey" placeholder="sk-...">
+      <div class="help-text">
+        Your API key is stored locally and never shared. 
+        <a href="https://platform.openai.com/api-keys" target="_blank">Get your API key here</a>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Model Name</label>
+      <div class="toggle-container">
+        <span style="font-size: 13px; color: #808080;">Use dropdown</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="useDropdownToggle">
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size: 13px; color: #808080;">Custom input</span>
+      </div>
+      <div id="modelDropdownContainer" class="model-input-container active">
+        <select id="modelDropdown">
+          <option value="">Loading models...</option>
+        </select>
+      </div>
+      <div id="modelInputContainer" class="model-input-container">
+        <input type="text" id="modelName" placeholder="gpt-3.5-turbo">
+      </div>
+      <div class="help-text">
+        <span id="modelHelpText">Select a model from the dropdown</span>
+        <br>
+        <span style="font-size: 11px; color: #808080;">Models last updated: 2025-11-12</span>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>No Markdown Mode</label>
+      <div class="toggle-container">
+        <span style="font-size: 13px; color: #808080;">Disabled</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="noMarkdownToggle">
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size: 13px; color: #808080;">Enabled</span>
+      </div>
+      <div class="help-text">
+        When enabled, the model will be instructed not to use markdown formatting, improving readability in plain text responses
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Keyboard Shortcut</label>
+      <button id="hotkeyBtn" type="button">Configure Hotkey</button>
+      <div class="help-text">
+        Click to open Chrome's keyboard shortcuts page where you can set a custom hotkey to toggle WinGPT
+      </div>
+    </div>
+    
+    <button id="saveBtn">Save</button>
+    
+    <div id="status" class="status"></div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>
